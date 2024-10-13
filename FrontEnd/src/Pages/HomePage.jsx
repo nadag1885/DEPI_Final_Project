@@ -84,6 +84,7 @@ const HomePage = () => {
                                 <img src={post.imageURL} alt={post.title} />
                                 <div className="articleInfo">
                                     <h2>{post.title}</h2>
+                                    <p className='category'>{post.categories.join(',')}</p>
                                     <p>{post.content}</p>
                                     <span></span>
                                     <div className="author">
