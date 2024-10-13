@@ -38,7 +38,6 @@ const SignUp = ({ handleLogin }) => {
             body: JSON.stringify(formData),
         })
         .then((response) => {
-            response.json().then((body)=> console.log(body))
             if (response.ok) {
                 
                 response.json().then((body)=>localStorage.setItem('token',body.type + " " + body.token))
