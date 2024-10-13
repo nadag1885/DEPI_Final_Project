@@ -6,9 +6,14 @@ import blogsRouter from './routes/blogs.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: "*",
+    methods: "GET, POST, PUT, DELETE"
+}));
 app.use(logger('dev'));
 app.use(json());
+
+app.options('*', cors());
 
 app.use("/users", usersRouter);
 app.use("/blogs", blogsRouter);
