@@ -25,7 +25,7 @@ const AddNewArticle = ({ addNewArticle }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const url = 'https://greasy-noelle-living-c4de0690.koyeb.app/blogs/';  
+        const url = process.env.REACT_APP_BE_API + '/blogs/';  
         formData.categories = formData.categories.split(',')
             fetch(url, {
                 method: 'POST',

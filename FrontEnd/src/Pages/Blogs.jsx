@@ -1,67 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollButton from '../Components/ScrollButton';
-import blogData from '../Data';
 
 const Blogs = () => {
-    const [searchTerm, setSearchTerm] = useState("");
+  const [blogData, setBlogData] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [loading, setLoading] = useState(true);  
+  const [error, setError] = useState(null);  
 
-    const filteredPosts = blogData.filter((post) =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      const url = process.env.REACT_APP_BE_API + '/blogs/';
 
-
-const url = 'https://greasy-noelle-living-c4de0690.koyeb.app/blogs/'
-
-    fetch(url, {
-        method: 'GET',
-        headers: {
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
             'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('token')
-        },
-    }).then((response) => {
-        response.json().then((data)=>console.log(data))
+            'Authorization': localStorage.getItem('token'),  
+          },
+        });
+
         if (response.ok) {
+          const data = await response.json();
+          setBlogData(data);
+          console.log(data)
         } else {
-            console.error('Failed to add article:', response.statusText);
+          setError('Failed to fetch blogs'); 
         }
-    })
+      } catch (err) {
+        setError('An error occurred while fetching data');  
+      } finally {
+        setLoading(false);  
+      }
+    };
 
+    fetchBlogs();  
+  }, []);  
 
-    return (
-        <div>
-            <div className="allPosts">
-                <h3>All Posts</h3>
-                <div className="searchContainer">
-                    <input
-                        type="text"
-                        placeholder="Search by title or author"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                <div className="cards">
-                    {filteredPosts.map((post, index) => (
-                        <Link to={`/blog/${index}`} key={index} className="card-link">
-                            <div className="card" key={index}>
-                                <img src={post.picture} alt={post.title} />
-                                <div className="articleInfo">
-                                    <h2>{post.title}</h2>
-                                    <p>{post.firstParagraph}</p>
-                                    <span></span>
-                                    <div className="author">
-                                        <p className='authorName'>{post.author}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-                <ScrollButton />
-            </div>
+  const filteredPosts = blogData.filter((post) =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    post.author.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return <div>Loading...</div>;  
+  }
+
+  if (error) {
+    return <div>{error}</div>; 
+  }
+
+  return (
+    <div>
+      <div className="allPosts">
+        <h3>All Posts</h3>
+        <div className="searchContainer">
+          <input
+            type="text"
+            placeholder="Search by title or author"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-    )
-}
+        <div className="cards">
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post, index) => (
+              <Link to={`/blog/${index}`} key={index} className="card-link">
+                <div className="card">
+                  <img src={post.imageURL} alt={post.title} />
+                  <div className="articleInfo">
+                    <h2>{post.title}</h2>
+                    <p className='category'>{post.categories.join(',')}</p>
+                    <p>{post.content}</p>
+                    <span></span>
+                    <div className="author">
+                      <p className="authorName">{post.author.name}</p>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))
+          ) : (
+            <p>No posts found.</p> 
+          )}
+        </div>
+        <ScrollButton />
+      </div>
+    </div>
+  );
+};
 
-export default Blogs
+export default Blogs;

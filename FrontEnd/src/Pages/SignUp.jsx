@@ -24,10 +24,12 @@ const SignUp = ({ handleLogin }) => {
     };
     const navigate = useNavigate();
 
+
+
+
     const onSubmit = (e) => {
         e.preventDefault();  
-        const url = isLoginMode ? 'https://greasy-noelle-living-c4de0690.koyeb.app/users/login' : 'https://greasy-noelle-living-c4de0690.koyeb.app/users/register';  
-        console.log(url)
+        const url = isLoginMode ? process.env.REACT_APP_BE_API +'/users/login' : process.env.REACT_APP_BE_API +'/users/register';  
         fetch(url, {  
             method: 'POST',
             headers: {
