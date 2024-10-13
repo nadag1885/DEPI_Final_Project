@@ -28,7 +28,7 @@
 .allPosts{
     background-color: #f0eded;
     text-align: center;
-    padding: 100px;  
+    padding-top: 100px;
 }
 .searchContainer input{
     padding: 12px;
@@ -42,7 +42,7 @@
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 50px;
+    gap: 20px;
     margin-top: 50px;
 }
 .card{

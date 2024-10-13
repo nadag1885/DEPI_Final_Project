@@ -12,6 +12,23 @@ const Blogs = () => {
     );
 
 
+const url = 'https://greasy-noelle-living-c4de0690.koyeb.app/blogs/'
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token')
+        },
+    }).then((response) => {
+        response.json().then((data)=>console.log(data))
+        if (response.ok) {
+        } else {
+            console.error('Failed to add article:', response.statusText);
+        }
+    })
+
+
     return (
         <div>
             <div className="allPosts">

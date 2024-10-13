@@ -1,54 +1,121 @@
-import React from "react";
-import "./SignUp.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const SignUp = () => {
+import './SignUp.css';
+
+const SignUp = ({ handleLogin }) => {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        name: '',  
+    });
+
+    const [isLoginMode, setIsLoginMode] = useState(true);  
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const toggleMode = () => {
+        setIsLoginMode(!isLoginMode);
+    };
+    const navigate = useNavigate();
+
+    const onSubmit = (e) => {
+        e.preventDefault();  
+        const url = isLoginMode ? 'https://greasy-noelle-living-c4de0690.koyeb.app/users/login' : 'https://greasy-noelle-living-c4de0690.koyeb.app/users/register';  
+        console.log(url)
+        fetch(url, {  
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        })
+        .then((response) => {
+            if (response.ok) {
+                response.json().then((body)=>localStorage.setItem('token',body.type + " " + body.token))
+                handleLogin(); 
+                console.error(`${isLoginMode ? 'Login' : 'Signup'} failed`);
+                navigate('/');
+
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    };
+
+
+
+
     return (
         <div className="wrapper">
             <div className="card-switch">
                 <label className="switch">
-                    <input className="toggle" type="checkbox" />
+                    <input className="toggle" type="checkbox" onClick={toggleMode} />
                     <span className="slider" />
                     <span className="card-side" />
                     <div className="flip-card__inner">
-                        <div className="flip-card__front">
+                        <div className={`flip-card__front ${isLoginMode ? 'visible' : ''}`}>
                             <div className="title">Log in</div>
-                            <form action="" className="flip-card__form">
+                            <form className="flip-card__form" onSubmit={onSubmit}>
                                 <input
                                     type="email"
                                     placeholder="Email"
                                     name="email"
                                     className="flip-card__input"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
                                 />
                                 <input
                                     type="password"
                                     placeholder="Password"
                                     name="password"
                                     className="flip-card__input"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
                                 />
-                                <button className="flip-card__btn">Let`s go!</button>
+                                <button className="flip-card__btn" type="submit" onSubmit={onSubmit}>Log In</button>
                             </form>
                         </div>
-                        <div className="flip-card__back">
+
+                        <div className={`flip-card__back ${!isLoginMode ? 'visible' : ''}`}>
                             <div className="title">Sign up</div>
-                            <form action="" className="flip-card__form">
+                            <form className="flip-card__form" onSubmit={onSubmit}>
                                 <input
-                                    type="name"
+                                    type="text"
                                     placeholder="Name"
+                                    name="name"
                                     className="flip-card__input"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
                                 />
                                 <input
                                     type="email"
                                     placeholder="Email"
                                     name="email"
                                     className="flip-card__input"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
                                 />
                                 <input
                                     type="password"
                                     placeholder="Password"
                                     name="password"
                                     className="flip-card__input"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    required
                                 />
-                                <button className="flip-card__btn">Confirm!</button>
+                                <button className="flip-card__btn" type="submit">Sign Up</button>
                             </form>
                         </div>
                     </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({login}) => {
     return (
         <div className='navbar'>
             <Link to='/'>
@@ -12,10 +12,19 @@ const Navbar = () => {
                 </div>
             </Link>
             <div className="links">
+            {login ? (
+                <>
                 <Link to='/'>Home</Link>
                 <Link to='/blogs'>Blogs</Link>
                 <Link to='/add-article'>Add New Blog</Link>
+                <Link to='/signout'>SignOut</Link>
+                </>
+            ): (
+                <>
                 <Link to='/signup'>SignUp</Link>
+                </>
+            )}
+
             </div>
         </div>
     )
