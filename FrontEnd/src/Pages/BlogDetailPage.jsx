@@ -6,7 +6,6 @@ const BlogDetails = () => {
 
     const [blogData, setBlogData] = useState([]); 
     const [loading, setLoading] = useState(true);  
-    const [error, setError] = useState(null);  
 
 
 
@@ -28,10 +27,10 @@ const BlogDetails = () => {
                 setBlogData(data);
                 console.log(data)
             } else {
-                setError('Failed to fetch blogs'); 
+                console.log('Failed to fetch blogs'); 
             }
             } catch (err) {
-            setError('An error occurred while fetching data');  
+            console.log('An error occurred while fetching data');  
             } finally {
             setLoading(false);  
             }
@@ -51,9 +50,6 @@ const BlogDetails = () => {
     return <div>Loading...</div>;  
     }
 
-    if (error) {
-    return <div>{error}</div>; 
-    }
 
     return (
         <div className="blogDetails">

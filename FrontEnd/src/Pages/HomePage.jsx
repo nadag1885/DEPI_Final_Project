@@ -8,7 +8,6 @@ const HomePage = () => {
     const [blogData, setBlogData] = useState([]); 
     const [searchTerm, setSearchTerm] = useState(""); 
     const [loading, setLoading] = useState(true);  
-    const [error, setError] = useState(null);  
       
         useEffect(() => {
           const fetchBlogs = async () => {
@@ -28,16 +27,18 @@ const HomePage = () => {
                 setBlogData(data);
                 console.log(data)
               } else {
-                setError('Failed to fetch blogs'); 
+                console.log('Failed to fetch blogs'); 
               }
             } catch (err) {
-              setError('An error occurred while fetching data');  
+              console.log(err)
             } finally {
               setLoading(false);  
             }
           };
-      
-          fetchBlogs();  
+          if(blogData.length === 0){
+            fetchBlogs();  
+          }
+          // fetchBlogs()
         }, []);  
       
         const filteredPosts = blogData.filter((post) =>
@@ -49,9 +50,7 @@ const HomePage = () => {
           return <div>Loading...</div>;  
         }
       
-        if (error) {
-          return <div>{error}</div>; 
-        }
+ 
 
     // const filteredPosts = blogData.filter((post) =>
     //     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -84,7 +83,6 @@ const HomePage = () => {
                                 <img src={post.imageURL} alt={post.title} />
                                 <div className="articleInfo">
                                     <h2>{post.title}</h2>
-                                    <p className='category'>{post.categories.join(',')}</p>
                                     <p>{post.content}</p>
                                     <span></span>
                                     <div className="author">

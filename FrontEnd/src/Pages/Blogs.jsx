@@ -6,7 +6,6 @@ const Blogs = () => {
   const [blogData, setBlogData] = useState([]); 
   const [searchTerm, setSearchTerm] = useState(""); 
   const [loading, setLoading] = useState(true);  
-  const [error, setError] = useState(null);  
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -26,16 +25,17 @@ const Blogs = () => {
           setBlogData(data);
           console.log(data)
         } else {
-          setError('Failed to fetch blogs'); 
+          console.log('Failed to fetch blogs'); 
         }
       } catch (err) {
-        setError('An error occurred while fetching data');  
+        console.log('An error occurred while fetching data');  
       } finally {
         setLoading(false);  
       }
     };
-
-    fetchBlogs();  
+    if(blogData.length === 0){
+      fetchBlogs();  
+    }
   }, []);  
 
   const filteredPosts = blogData.filter((post) =>
@@ -47,9 +47,6 @@ const Blogs = () => {
     return <div>Loading...</div>;  
   }
 
-  if (error) {
-    return <div>{error}</div>; 
-  }
 
   return (
     <div>
